@@ -1,0 +1,2 @@
+# CC0 Creative Commons License
+background.jpg = https://pixabay.com/de/hirsch-traum-tier-fantasie-1333814/

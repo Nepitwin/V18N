@@ -1,0 +1,21 @@
+ext {
+    javaSourceCompatibility = 1.8
+    javaTargetCompatibility = 1.8
+
+    hsqldbVersion = "2.4.1"
+
+    springBootVersion = "2.0.4.RELEASE"
+    springBootStarterTomcatVersion = "2.0.4.RELEASE"
+    springBootStarterSecurityVersion = "2.0.4.RELEASE"
+    springBootStarterJPAVersion = "2.0.4.RELEASE"
+    springBootStarterTestVersion = "2.0.4.RELEASE"
+    springBootDevToolsVersion = "2.0.4.RELEASE"
+
+    springSecurityTestVersion = "5.0.7.RELEASE"
+
+    vaadinVersion = "8.5.1"
+    vaadinSpringBootStarterVersion = "3.1.0"
+    vaadinExtSecurityVersion = "2.0.0.RELEASE"
+    vaadinExtBootVersion = "2.0.0.RELEASE"
+    vaadinSpringI18NVersion = "2.0.0.RELEASE"
+}
