@@ -7,10 +7,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Created by basakpie on 2017. 5. 11..
+ * Role repository class to check user authorities.
+ *
+ * @author Andreas Sekulski
  */
 @Transactional(readOnly = true)
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
+    /**
+     * Get list from all roles from a given user.
+     *
+     * @param userId User id to gain all roles.
+     * @return List from all roles by user.
+     */
     List<Role> findByUserId(Long userId);
 }

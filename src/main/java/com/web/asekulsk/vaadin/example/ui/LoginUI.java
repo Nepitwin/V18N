@@ -4,21 +4,19 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.Page;
-import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import com.web.asekulsk.vaadin.example.util.V18NTheme;
+import com.web.asekulsk.vaadin.example.component.LanguageSelector;
 import com.web.asekulsk.vaadin.example.util.HTML;
+import com.web.asekulsk.vaadin.example.util.V18NTheme;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.vaadin.spring.i18n.I18N;
-import org.vaadin.spring.i18n.support.Translatable;
 import org.vaadin.spring.i18n.support.TranslatableUI;
 import org.vaadin.spring.security.shared.VaadinSharedSecurity;
 
@@ -26,11 +24,12 @@ import java.util.Locale;
 
 /**
  * Vaadin login user interface.
+ *
  * @author Andreas Sekulski
  */
 @SpringUI(path = "/login")
 @Theme("V18N")
-public class LoginUI extends TranslatableUI implements Translatable {
+public class LoginUI extends TranslatableUI {
 
     /**
      * Internationalizing
@@ -64,10 +63,24 @@ public class LoginUI extends TranslatableUI implements Translatable {
      */
     private Label labelSignIn;
 
+    /**
+     * Information label which contains static data.
+     */
+    private Label informationLabel;
+
+    /**
+     * Language selector to set supported languages.
+     */
+    @Autowired
+    private LanguageSelector languageSelector;
+
+    @Override
+    public void setLocale(Locale locale) {
+        updateMessageStrings();
+    }
+
     @Override
     protected void initUI(VaadinRequest request) {
-        setLocale(VaadinSession.getCurrent().getLocale());
-
         FormLayout loginForm = new FormLayout();
         loginForm.setSizeUndefined();
 
@@ -105,10 +118,8 @@ public class LoginUI extends TranslatableUI implements Translatable {
         loginLayout.setComponentAlignment(loginForm, Alignment.TOP_CENTER);
 
         // Get static html file from resources folder
-        ClassLoader classLoader = getClass().getClassLoader();
-        String informationHTML = "static/information";
-        String staticInformationHTML = HTML.loadStaticHTML(classLoader, informationHTML, getLocale());
-        Label informationLabel = new Label(staticInformationHTML, ContentMode.HTML);
+        informationLabel = new Label();
+        informationLabel.setContentMode(ContentMode.HTML);
         informationLabel.addStyleName(V18NTheme.TEXT_COLOR_LOGIN);
         informationLabel.setWidth("100%");
 
@@ -125,12 +136,10 @@ public class LoginUI extends TranslatableUI implements Translatable {
 
         VerticalLayout infoLayout = new VerticalLayout();
         infoLayout.addComponent(infoBox);
+        infoLayout.addComponent(languageSelector);
         infoLayout.setWidth("50%");
         infoLayout.setHeight("100%");
-
-        // Make I18N
-        I18N();
-
+        infoLayout.setExpandRatio(infoBox, 0.95f);
 
         HorizontalLayout rootLayout = new HorizontalLayout();
         rootLayout.addComponent(infoLayout);
@@ -139,6 +148,9 @@ public class LoginUI extends TranslatableUI implements Translatable {
         rootLayout.addStyleName(V18NTheme.LOGIN_BACKGROUND);
         setContent(rootLayout);
         setSizeFull();
+
+        // Set focus to username
+        usernameField.focus();
 
         if (request.getParameter("logout") != null) {
             // Show log out notification
@@ -149,14 +161,22 @@ public class LoginUI extends TranslatableUI implements Translatable {
             logOutNotification.setPosition(Position.TOP_CENTER);
             logOutNotification.show(Page.getCurrent());
         }
-
-        // Set focus to username
-        usernameField.focus();
     }
 
     @Override
-    public void updateMessageStrings(Locale locale) {
+    protected void updateMessageStrings() {
+        Locale locale = languageSelector.getLocale();
 
+        getPage().setTitle(i18n.get("login", locale));
+        usernameField.setPlaceholder(i18n.get("username", locale));
+        passwordField.setPlaceholder(i18n.get("password", locale));
+        login.setCaption(i18n.get("login", locale));
+        labelSignIn.setValue(i18n.get("sign", locale));
+
+        // Get static html file from resources folder
+        ClassLoader classLoader = getClass().getClassLoader();
+        String informationHTML = "static/information";
+        informationLabel.setValue(HTML.loadStaticHTML(classLoader, informationHTML, locale));
     }
 
     /**
@@ -172,30 +192,19 @@ public class LoginUI extends TranslatableUI implements Translatable {
 
             // Show log in failde notification
             Notification loginFailedNotification = new Notification("",
-                    i18n.get("login.failed", getLocale()),
+                    i18n.get("login.failed", languageSelector.getLocale()),
                     Notification.Type.ERROR_MESSAGE);
             loginFailedNotification.setDelayMsec(2000);
             loginFailedNotification.setPosition(Position.TOP_CENTER);
             loginFailedNotification.show(Page.getCurrent());
 
         } catch (Exception ex) {
-            Notification.show(i18n.get("error.message.unknown", getLocale()),
+            Notification.show(i18n.get("error.message.unknown", languageSelector.getLocale()),
                     ex.getMessage(),
                     Notification.Type.ERROR_MESSAGE);
             LoggerFactory.getLogger(getClass()).error("Unexpected error while logging in", ex);
         } finally {
             login.setEnabled(true);
         }
-    }
-
-    /**
-     * I18N Method to update information to given local language.
-     */
-    private void I18N() {
-        getPage().setTitle(i18n.get("login", getLocale()));
-        usernameField.setPlaceholder(i18n.get("username", getLocale()));
-        passwordField.setPlaceholder(i18n.get("password", getLocale()));
-        login.setCaption(i18n.get("login", getLocale()));
-        labelSignIn.setValue(i18n.get("sign", getLocale()));
     }
 }

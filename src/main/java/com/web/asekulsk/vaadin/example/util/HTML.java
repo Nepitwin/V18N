@@ -31,7 +31,7 @@ public class HTML {
      */
     public static String loadStaticHTML(ClassLoader classLoader, String file, Locale locale) {
         File htmlFile;
-        String country = locale.getCountry().toLowerCase();
+        String country = locale.toLanguageTag();
 
         URL url = classLoader.getResource(file + "_" + country + ".html");
         if (url != null) {
@@ -41,16 +41,7 @@ public class HTML {
             }
         }
 
-        // Default fallback file must exists
-        url = classLoader.getResource(file + ".html");
-        if (url != null) {
-            htmlFile = new File(url.getFile());
-            if (htmlFile.exists()) {
-                return loadFile(htmlFile);
-            }
-        }
-
-        return "";
+        return "<h1><STATIC_FILE_NOT_FOUND></h1>";
     }
 
     /**

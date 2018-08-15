@@ -24,11 +24,13 @@ $v-font-family: 'Oxygen', sans-serif;
 
   .login-background {
     background: url(img/background.jpg);
-    background-size: contain;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .login-form {
-    width: 620px;
+    width: 100%;
     margin: 0;
     background-color: lightgray;
   }

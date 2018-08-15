@@ -28,6 +28,11 @@ import org.vaadin.spring.security.shared.VaadinSessionClosingLogoutHandler;
 import org.vaadin.spring.security.shared.VaadinUrlAuthenticationSuccessHandler;
 import org.vaadin.spring.security.web.VaadinRedirectStrategy;
 
+/**
+ * Vaadin spring security context configuration class.
+ *
+ * @author Andreas Sekulski
+ */
 @Configuration
 @EnableVaadin
 @EnableWebSecurity
@@ -36,12 +41,53 @@ import org.vaadin.spring.security.web.VaadinRedirectStrategy;
 @EnableJpaAuditing
 public class VaadinSpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    /**
+     * User detail service to handle user management.
+     */
     @Autowired
-    UserDetailsService userDetailsService;
+    private UserDetailsService userDetailsService;
 
+    /**
+     * Password encoder to generate passwords.
+     *
+     * @return BCryptPasswordEncoder will be created and return.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * Remember me service to store login token.
+     *
+     * @return Remember me token to store.
+     */
+    @Bean
+    public RememberMeServices rememberMeServices() {
+        return new TokenBasedRememberMeServices("myAppKey", userDetailsService);
+    }
+
+    /**
+     * Authentication strategy handling.
+     *
+     * @return Session fixation protection strategy handling will be used.
+     */
+    @Bean
+    public SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+        return new SessionFixationProtectionStrategy();
+    }
+
+    /**
+     * Success handler if authentication is successfully.
+     *
+     * @param httpService            HTTP service to redirect.
+     * @param vaadinRedirectStrategy Redirect strategy to use.
+     * @return Vaadin URL authentication handler.
+     */
+    @Bean(name = VaadinSharedSecurityConfiguration.VAADIN_AUTHENTICATION_SUCCESS_HANDLER_BEAN)
+    public VaadinAuthenticationSuccessHandler vaadinAuthenticationSuccessHandler(HttpService httpService,
+                                                                                 VaadinRedirectStrategy vaadinRedirectStrategy) {
+        return new VaadinUrlAuthenticationSuccessHandler(httpService, vaadinRedirectStrategy, "/");
     }
 
     @Override
@@ -78,21 +124,5 @@ public class VaadinSpringSecurityConfiguration extends WebSecurityConfigurerAdap
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public RememberMeServices rememberMeServices() {
-        return new TokenBasedRememberMeServices("myAppKey", userDetailsService);
-    }
-
-    @Bean
-    public SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-        return new SessionFixationProtectionStrategy();
-    }
-
-    @Bean(name = VaadinSharedSecurityConfiguration.VAADIN_AUTHENTICATION_SUCCESS_HANDLER_BEAN)
-    public VaadinAuthenticationSuccessHandler vaadinAuthenticationSuccessHandler(HttpService httpService,
-                                                                                 VaadinRedirectStrategy vaadinRedirectStrategy) {
-        return new VaadinUrlAuthenticationSuccessHandler(httpService, vaadinRedirectStrategy, "/");
     }
 }

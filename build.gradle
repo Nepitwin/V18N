@@ -24,6 +24,7 @@ targetCompatibility = javaTargetCompatibility
 
 repositories {
     mavenCentral()
+    maven { url "http://maven.vaadin.com/vaadin-addons" }
 }
 
 configurations {
@@ -46,6 +47,8 @@ dependencies {
     compile group: 'org.vaadin.spring.extensions', name: 'vaadin-spring-ext-boot', version: vaadinExtBootVersion
     // https://mvnrepository.com/artifact/org.vaadin.spring.addons/vaadin-spring-addon-i18n
     compile group: 'org.vaadin.spring.addons', name: 'vaadin-spring-addon-i18n', version: vaadinSpringI18NVersion
+    // https://mvnrepository.com/artifact/org.vaadin.addons.countryflag/country-flag
+    compile group: 'org.vaadin.addons.countryflag', name: 'country-flag', version: vaadinAddonsCountryFlag
 
     // https://mvnrepository.com/artifact/org.hsqldb/hsqldb
     compile group: 'org.hsqldb', name: 'hsqldb', version: hsqldbVersion

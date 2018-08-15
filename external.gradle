@@ -18,4 +18,5 @@ ext {
     vaadinExtSecurityVersion = "2.0.0.RELEASE"
     vaadinExtBootVersion = "2.0.0.RELEASE"
     vaadinSpringI18NVersion = "2.0.0.RELEASE"
+    vaadinAddonsCountryFlag = "1.0.1"
 }

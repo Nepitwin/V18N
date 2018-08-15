@@ -5,11 +5,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Created by basakpie on 2017. 5. 11..
+ * User management read only repository.
+ *
+ * @author Andreas Sekulski
  */
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    /**
+     * Find user by username.
+     *
+     * @param name Username to find.
+     * @return NULL if user not found otherwise user.
+     */
     User findByUsername(String name);
-
 }
