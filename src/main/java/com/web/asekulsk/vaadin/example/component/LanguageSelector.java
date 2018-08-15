@@ -22,7 +22,10 @@ public class LanguageSelector extends HorizontalLayout {
      * Language selector constructor to create default selector.
      */
     public LanguageSelector() {
-        locale = Locale.ENGLISH;
+
+        if(locale == null) {
+            locale = Locale.ENGLISH;
+        }
 
         Country germany = new Country("DE", this, Locale.GERMAN);
         Country english = new Country("GB", this, Locale.ENGLISH);

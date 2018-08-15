@@ -35,7 +35,7 @@ public class LoginUI extends TranslatableUI {
      * Internationalizing
      */
     @Autowired
-    I18N i18n;
+    private I18N i18n;
 
     /**
      * Vaadin based spring web security setup
@@ -44,35 +44,69 @@ public class LoginUI extends TranslatableUI {
     private VaadinSharedSecurity vaadinSecurity;
 
     /**
+     * Notification for login, logout or error messages.
+     */
+    private Notification notification;
+
+    /**
      * Username as textfield
      */
-    private TextField usernameField;
+    private final TextField usernameField = new TextField();
 
     /**
      * Password field.
      */
-    private PasswordField passwordField;
+    private final PasswordField passwordField = new PasswordField();
 
     /**
      * Login button.
      */
-    private Button login;
+    private final Button login = new Button();
 
     /**
      * Sign in label text.
      */
-    private Label labelSignIn;
+    private final Label labelSignIn = new Label();
 
     /**
      * Information label which contains static data.
      */
-    private Label informationLabel;
+    private final Label informationLabel = new Label();
+
+    /**
+     * Sign in layout.
+     */
+    private final VerticalLayout signInLayout = new VerticalLayout();
+
+    /**
+     * Login layout box.
+     */
+    private final VerticalLayout loginLayout = new VerticalLayout();
+
+    /**
+     * Information box layout.
+     */
+    private final VerticalLayout information = new VerticalLayout();
+
+    /**
+     * Information box which contains login box and information.
+     */
+    private final VerticalLayout infoBox = new VerticalLayout();
+
+    /**
+     * Left information box layout.
+     */
+    private final VerticalLayout infoLayout = new VerticalLayout();
+
+    /**
+     * Root layout from login.
+     */
+    private final HorizontalLayout rootLayout = new HorizontalLayout();
 
     /**
      * Language selector to set supported languages.
      */
-    @Autowired
-    private LanguageSelector languageSelector;
+    private final LanguageSelector languageSelector = new LanguageSelector();
 
     @Override
     public void setLocale(Locale locale) {
@@ -84,13 +118,9 @@ public class LoginUI extends TranslatableUI {
         FormLayout loginForm = new FormLayout();
         loginForm.setSizeUndefined();
 
-        usernameField = new TextField();
         usernameField.setIcon(VaadinIcons.USER);
-
-        passwordField = new PasswordField();
         passwordField.setIcon(VaadinIcons.PASSWORD);
 
-        login = new Button();
         login.addStyleName(ValoTheme.BUTTON_PRIMARY + " " + V18NTheme.LOGIN_BUTTON);
         login.setDisableOnClick(true);
         login.setClickShortcut(ShortcutAction.KeyCode.ENTER);
@@ -100,16 +130,13 @@ public class LoginUI extends TranslatableUI {
         loginForm.addComponent(passwordField);
         loginForm.addComponent(login);
 
-        labelSignIn = new Label();
         labelSignIn.addStyleName(ValoTheme.LABEL_H1 + " " + V18NTheme.NO_MARGIN);
 
-        VerticalLayout signInLayout = new VerticalLayout();
         signInLayout.setSizeFull();
         signInLayout.setMargin(false);
         signInLayout.addComponent(labelSignIn);
         signInLayout.addStyleName(V18NTheme.TEXT_ALIGN_CENTER);
 
-        VerticalLayout loginLayout = new VerticalLayout();
         loginLayout.setSpacing(false);
         loginLayout.setSizeUndefined();
         loginLayout.addStyleName(V18NTheme.LOGIN_FORM);
@@ -118,30 +145,25 @@ public class LoginUI extends TranslatableUI {
         loginLayout.setComponentAlignment(loginForm, Alignment.TOP_CENTER);
 
         // Get static html file from resources folder
-        informationLabel = new Label();
         informationLabel.setContentMode(ContentMode.HTML);
         informationLabel.addStyleName(V18NTheme.TEXT_COLOR_LOGIN);
         informationLabel.setWidth("100%");
 
-        VerticalLayout information = new VerticalLayout();
         information.addComponent(informationLabel);
         information.addComponent(loginLayout);
 
-        VerticalLayout infoBox = new VerticalLayout();
         infoBox.setMargin(false);
         infoBox.setSpacing(false);
         infoBox.setSizeFull();
         infoBox.addComponent(information);
         infoBox.addStyleName(V18NTheme.INFO_BOX);
 
-        VerticalLayout infoLayout = new VerticalLayout();
         infoLayout.addComponent(infoBox);
         infoLayout.addComponent(languageSelector);
         infoLayout.setWidth("50%");
         infoLayout.setHeight("100%");
         infoLayout.setExpandRatio(infoBox, 0.95f);
 
-        HorizontalLayout rootLayout = new HorizontalLayout();
         rootLayout.addComponent(infoLayout);
         rootLayout.setSizeFull();
         rootLayout.setComponentAlignment(infoLayout, Alignment.TOP_LEFT);
@@ -154,12 +176,12 @@ public class LoginUI extends TranslatableUI {
 
         if (request.getParameter("logout") != null) {
             // Show log out notification
-            Notification logOutNotification = new Notification(i18n.get("account", getLocale()),
+            notification = new Notification(i18n.get("account", getLocale()),
                     i18n.get("account.logout", getLocale()),
                     Notification.Type.TRAY_NOTIFICATION);
-            logOutNotification.setDelayMsec(2000);
-            logOutNotification.setPosition(Position.TOP_CENTER);
-            logOutNotification.show(Page.getCurrent());
+            notification.setDelayMsec(2000);
+            notification.setPosition(Position.TOP_CENTER);
+            notification.show(Page.getCurrent());
         }
     }
 
@@ -174,9 +196,8 @@ public class LoginUI extends TranslatableUI {
         labelSignIn.setValue(i18n.get("sign", locale));
 
         // Get static html file from resources folder
-        ClassLoader classLoader = getClass().getClassLoader();
         String informationHTML = "static/information";
-        informationLabel.setValue(HTML.loadStaticHTML(classLoader, informationHTML, locale));
+        informationLabel.setValue(HTML.loadStaticHTML(getClass().getClassLoader(), informationHTML, locale));
     }
 
     /**
@@ -191,12 +212,12 @@ public class LoginUI extends TranslatableUI {
             passwordField.setValue("");
 
             // Show log in failde notification
-            Notification loginFailedNotification = new Notification("",
+            notification = new Notification("",
                     i18n.get("login.failed", languageSelector.getLocale()),
                     Notification.Type.ERROR_MESSAGE);
-            loginFailedNotification.setDelayMsec(2000);
-            loginFailedNotification.setPosition(Position.TOP_CENTER);
-            loginFailedNotification.show(Page.getCurrent());
+            notification.setDelayMsec(2000);
+            notification.setPosition(Position.TOP_CENTER);
+            notification.show(Page.getCurrent());
 
         } catch (Exception ex) {
             Notification.show(i18n.get("error.message.unknown", languageSelector.getLocale()),

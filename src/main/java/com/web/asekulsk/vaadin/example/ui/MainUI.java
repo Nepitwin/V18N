@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.i18n.I18N;
 import org.vaadin.spring.security.VaadinSecurity;
 
+/**
+ * ToDo Create UI to show ADMIN and USER View
+ *
+ * @author Andreas Sekulski
+ */
 @SpringUI(path = "/")
 @Theme("V18N")
 public class MainUI extends UI {
@@ -17,10 +22,10 @@ public class MainUI extends UI {
      * I18N
      */
     @Autowired
-    I18N i18n;
+    private I18N i18n;
 
     @Autowired
-    VaadinSecurity vaadinSecurity;
+    private VaadinSecurity vaadinSecurity;
 
     @Override
     protected void init(VaadinRequest request) {
