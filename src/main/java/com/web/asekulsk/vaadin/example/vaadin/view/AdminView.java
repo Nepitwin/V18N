@@ -2,15 +2,18 @@ package com.web.asekulsk.vaadin.example.vaadin.view;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.spring.annotation.SpringView;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
+import com.vaadin.ui.*;
+import com.web.asekulsk.vaadin.example.vaadin.component.language.LanguageSelector;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.vaadin.spring.i18n.I18N;
+import org.vaadin.spring.i18n.support.Translatable;
 
 import javax.annotation.PostConstruct;
+import java.util.Locale;
 
 /**
  * Sample user view to visualize sample data.
@@ -19,7 +22,7 @@ import javax.annotation.PostConstruct;
  */
 @SpringView(name = AdminView.VIEW_NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class AdminView extends HorizontalLayout implements View {
+public class AdminView extends HorizontalLayout implements View, Translatable {
 
     /**
      * Defined unique view name to identify.
@@ -44,17 +47,22 @@ public class AdminView extends HorizontalLayout implements View {
     private final Panel container = new Panel();
 
     /**
-     * ToDo := I18N
-     * Home panel label name.
+     * I18N
      */
-    private static final String HOME_PANEL_NAME = "Administration Interface";
+    @Autowired
+    private I18N i18n;
+
+    /**
+     * Language selector to set supported languages.
+     */
+    private final LanguageSelector languageSelector = new LanguageSelector();
 
     @PostConstruct
     void init() {
         this.setSizeFull();
         this.setMargin(true);
 
-        container.setCaption(HOME_PANEL_NAME);
+        container.setCaption(i18n.get("panel.admin", languageSelector.getLocale()));
         container.setIcon(VaadinIcons.HOME_O);
         container.setSizeFull();
         container.setContent(panelContent());
@@ -69,10 +77,14 @@ public class AdminView extends HorizontalLayout implements View {
      * @return Component content from administration context.
      */
     private Component panelContent() {
+        ThemeResource resource = new ThemeResource("img/secret.png");
+        Image image = new Image("Bugs bugs bugs", resource);
+        image.setSizeFull();
+        return image;
+    }
 
-        // ToDo := Mini sample
-
-        return new Label("Hello");
+    @Override
+    public void updateMessageStrings(Locale locale) {
+        container.setCaption(i18n.get("panel.admin", languageSelector.getLocale()));
     }
 }
-

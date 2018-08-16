@@ -66,7 +66,7 @@ public class BugView extends HorizontalLayout implements View, Translatable {
         this.setMargin(true);
 
         container.setCaption(i18n.get("panel.bug", languageSelector.getLocale()));
-        container.setIcon(VaadinIcons.HOME_O);
+        container.setIcon(VaadinIcons.BUG_O);
         container.setSizeFull();
         container.setContent(panelContent());
 
@@ -88,7 +88,7 @@ public class BugView extends HorizontalLayout implements View, Translatable {
 
     @Override
     public void updateMessageStrings(Locale locale) {
-        i18n.get("panel.bug", locale);
+        container.setCaption(i18n.get("panel.bug", locale));
     }
 }
 

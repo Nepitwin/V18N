@@ -17,7 +17,7 @@ import java.util.Locale;
  *
  * @author Andreas Sekulski
  */
-public class MenuContainerItem implements MenuContainer {
+public class MenuContainerView implements MenuContainer {
 
     /**
      * View class to show
@@ -63,7 +63,7 @@ public class MenuContainerItem implements MenuContainer {
      * @param icon      Icon from menu
      * @param navigator Navigator to change view
      */
-    public MenuContainerItem(Class<? extends View> view, String viewID, String label, VaadinIcons icon, Navigator navigator) {
+    public MenuContainerView(Class<? extends View> view, String viewID, String label, VaadinIcons icon, Navigator navigator) {
         /* Responding view class to show */
         this.view = view;
         this.label = label;
@@ -85,7 +85,7 @@ public class MenuContainerItem implements MenuContainer {
      * @param i18N      Internationalizing object.
      * @param locale    Current locale to setup label value.
      */
-    public MenuContainerItem(Class<? extends View> view, String viewID, String label, VaadinIcons icon, Navigator navigator, I18N i18N, Locale locale) {
+    public MenuContainerView(Class<? extends View> view, String viewID, String label, VaadinIcons icon, Navigator navigator, I18N i18N, Locale locale) {
         /* Responding view class to show */
         this.view = view;
         this.label = label;
@@ -113,7 +113,9 @@ public class MenuContainerItem implements MenuContainer {
     public void I18N(Locale locale) {
         if(i18N != null) {
             navigationButton.setCaption(i18N.get(label, locale));
-            // ToDo Call I18N
+            if(navigator.getCurrentView() instanceof Translatable) {
+                ((Translatable) navigator.getCurrentView()).updateMessageStrings(locale);
+            }
         }
     }
 }

@@ -94,10 +94,10 @@ public class MainUI extends TranslatableUI {
 
         if(SecurityContextUtils.hasRole(RoleType.ROLE_ADMIN)) {
             // Only if admin is logged in
-            menuContainers.add(new MenuContainerItem(AdminView.class, AdminView.VIEW_NAME, AdminView.VIEW_DESCRIPTION, AdminView.VIEW_ICON, navigator, i18n, languageSelector.getLocale()));
+            menuContainers.add(new MenuContainerView(AdminView.class, AdminView.VIEW_NAME, AdminView.VIEW_DESCRIPTION, AdminView.VIEW_ICON, navigator, i18n, languageSelector.getLocale()));
         }
 
-        menuContainers.add(new MenuContainerItem(BugView.class, BugView.VIEW_NAME, BugView.VIEW_DESCRIPTION, BugView.VIEW_ICON, navigator, i18n, languageSelector.getLocale()));
+        menuContainers.add(new MenuContainerView(BugView.class, BugView.VIEW_NAME, BugView.VIEW_DESCRIPTION, BugView.VIEW_ICON, navigator, i18n, languageSelector.getLocale()));
 
         // Default view
         navigator.navigateTo(BugView.VIEW_NAME);
@@ -117,6 +117,8 @@ public class MainUI extends TranslatableUI {
         for(MenuContainer container : menuContainers) {
             container.I18N(locale);
         }
+
+
     }
 
     /**
