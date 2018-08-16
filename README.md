@@ -36,6 +36,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-[login]: Login.jpg "Login page from example"
+[login]: Login.JPG "Login page from example"
 
-[main]: UI.jpg "Sample main user interface for administrator"
+[main]: UI.JPG "Sample main user interface for administrator"
