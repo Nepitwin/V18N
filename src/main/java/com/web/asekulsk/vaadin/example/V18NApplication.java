@@ -1,9 +1,9 @@
 package com.web.asekulsk.vaadin.example;
 
-import com.web.asekulsk.vaadin.example.security.model.Role;
-import com.web.asekulsk.vaadin.example.security.model.User;
-import com.web.asekulsk.vaadin.example.security.repository.UserRepository;
-import com.web.asekulsk.vaadin.example.security.type.RoleType;
+import com.web.asekulsk.vaadin.example.spring.security.model.Role;
+import com.web.asekulsk.vaadin.example.spring.security.model.User;
+import com.web.asekulsk.vaadin.example.spring.security.repository.UserRepository;
+import com.web.asekulsk.vaadin.example.spring.security.type.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
